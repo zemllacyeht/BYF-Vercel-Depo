@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Footprint — Client Intake</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #0b130b;
+    --surface:      #111a11;
+    --border:       rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.18);
+    --green-cta:    #00c896;
+    --gold:         #c9a84c;
+    --text:         #e8ede8;
+    --muted:        rgba(232,237,232,0.45);
+    --input-bg:     rgba(255,255,255,0.03);
+    --grid:         rgba(255,255,255,0.03);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%; left: -10%;
+    width: 60%; height: 60%;
+    background: radial-gradient(ellipse, rgba(0,200,150,0.06) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 72px 28px 120px;
+  }
+
+  .header { margin-bottom: 64px; animation: fadeUp 0.7s ease both; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+
+  .tag::before { content: '✦'; color: var(--green-cta); font-size: 0.6rem; }
+
+  .header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .header h1 em {
+    font-style: italic;
+    background: linear-gradient(90deg, var(--gold), var(--green-cta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 480px;
+    font-weight: 300;
+  }
+
+  .divider-line {
+    width: 40px; height: 1px;
+    background: linear-gradient(90deg, var(--green-cta), transparent);
+    margin: 24px 0;
+  }
+
+  .steps {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 52px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .step-dot {
+    height: 2px;
+    border-radius: 2px;
+    flex: 1;
+    background: var(--border);
+    transition: background 0.4s;
+  }
+
+  .step-dot.active { background: var(--green-cta); }
+  .step-dot.done   { background: rgba(0,200,150,0.3); }
+
+  .section { display: none; animation: fadeUp 0.4s ease both; }
+  .section.active { display: block; }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green-cta);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+
+  .field { margin-bottom: 22px; }
+
+  .field label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(232,237,232,0.55);
+    margin-bottom: 8px;
+  }
+
+  .field label span { color: var(--green-cta); margin-left: 2px; }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder { color: rgba(232,237,232,0.18); }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: rgba(0,200,150,0.4);
+    background: rgba(0,200,150,0.02);
+  }
+
+  .field select option { background: #111a11; color: #e8ede8; }
+  .field textarea { resize: vertical; min-height: 120px; line-height: 1.7; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+
+  .chip {
+    padding: 8px 18px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: 0.8rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+    background: transparent;
+    user-select: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .chip:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .chip.selected {
+    border-color: var(--green-cta);
+    color: var(--green-cta);
+    background: rgba(0,200,150,0.06);
+  }
+
+  .nav { display: flex; gap: 14px; align-items: center; margin-top: 44px; }
+
+  .btn-next {
+    flex: 1;
+    background: var(--green-cta);
+    border: none;
+    color: #0b130b;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-next:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-back {
+    background: transparent;
+    border: 1px solid var(--border-hover);
+    color: var(--muted);
+    padding: 13px 24px;
+    border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-back:hover { border-color: rgba(255,255,255,0.35); color: var(--text); }
+
+  .success {
+    display: none;
+    text-align: center;
+    padding: 80px 0 40px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .success-mark {
+    font-family: 'Fraunces', serif;
+    font-size: 4rem;
+    color: var(--green-cta);
+    margin-bottom: 24px;
+    display: block;
+    font-style: italic;
+  }
+
+  .success h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 2.4rem;
+    margin-bottom: 14px;
+    line-height: 1.15;
+  }
+
+  .success h2 em {
+    font-style: italic;
+    background: linear-gradient(90deg, var(--gold), var(--green-cta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .success p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .success-tag {
+    display: inline-block;
+    margin-top: 36px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .error-msg {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: rgba(255,80,80,0.06);
+    border: 1px solid rgba(255,80,80,0.18);
+    color: #ff9090;
+    font-size: 0.82rem;
+    display: none;
+  }
+
+  .footer {
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: rgba(232,237,232,0.2);
+  }
+
+  .footer-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(232,237,232,0.3);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="header">
+    <div class="tag">Design · Hosting · Ongoing Partnership</div>
+    <h1>Your brand's <em>digital footprint</em><br>starts here.</h1>
+    <div class="divider-line"></div>
+    <p>Tell us about your business and what you're looking to build. This takes about 3 minutes and helps us hit the ground running on your project.</p>
+  </header>
+
+  <div class="steps" id="steps">
+    <div class="step-dot active" id="dot-0"></div>
+    <div class="step-dot" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="section active" id="section-0">
+    <div class="section-label">Step 1 of 3</div>
+    <div class="section-title">About your business</div>
+    <div class="section-desc">Let's start with the basics so we know who we're working with.</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Your Name <span>*</span></label>
+        <input type="text" id="clientName" placeholder="Jane Smith" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>Business Name <span>*</span></label>
+        <input type="text" id="businessName" placeholder="Bloom Studio" autocomplete="organization">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Industry <span>*</span></label>
+      <select id="industry">
+        <option value="">Select your industry...</option>
+        <option>Technology</option>
+        <option>Restaurant & Food</option>
+        <option>Health & Wellness</option>
+        <option>Retail & E-Commerce</option>
+        <option>Non-Profit</option>
+        <option>Professional Services</option>
+        <option>Beauty & Salon</option>
+        <option>Real Estate</option>
+        <option>Education</option>
+        <option>Entertainment</option>
+        <option>Construction & Trades</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Current Website</label>
+      <input type="url" id="currentWebsite" placeholder="https://yoursite.com  (leave blank if none)" autocomplete="url">
+    </div>
+
+    <div class="nav">
+      <button class="btn-next" onclick="goNext(0)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="section" id="section-1">
+    <div class="section-label">Step 2 of 3</div>
+    <div class="section-title">What do you need?</div>
+    <div class="section-desc">Select everything that applies. We'll build a package around your goals.</div>
+
+    <div class="field">
+      <label>Services you're interested in <span>*</span></label>
+      <div class="chips" id="serviceChips">
+        <div class="chip" data-val="Website Design">Website Design</div>
+        <div class="chip" data-val="Brand Identity">Brand Identity</div>
+        <div class="chip" data-val="SEO Optimization">SEO Optimization</div>
+        <div class="chip" data-val="Social Media Strategy">Social Media</div>
+        <div class="chip" data-val="Digital Advertising">Digital Advertising</div>
+        <div class="chip" data-val="Hosting & Domain">Hosting & Domain</div>
+        <div class="chip" data-val="Full Digital Presence">Full Digital Presence</div>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top: 32px;">
+      <label>Tell us more</label>
+      <textarea id="notes" placeholder="Describe your goals, what's not working with your current setup, your timeline, or anything else we should know..."></textarea>
+    </div>
+
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(1)">← Back</button>
+      <button class="btn-next" onclick="goNext(1)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="section" id="section-2">
+    <div class="section-label">Step 3 of 3</div>
+    <div class="section-title">How to reach you</div>
+    <div class="section-desc">We'll be in touch within 24 hours to schedule your free discovery call.</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Email Address <span>*</span></label>
+        <input type="email" id="email" placeholder="jane@yourbusiness.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Phone Number</label>
+        <input type="tel" id="phone" placeholder="305-555-0100" autocomplete="tel">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>How did you hear about us?</label>
+      <select id="referral">
+        <option value="">Select one...</option>
+        <option>Word of Mouth</option>
+        <option>Social Media</option>
+        <option>Cold Outreach</option>
+        <option>Referral Reward Program</option>
+        <option>SEO / Google</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(2)">← Back</button>
+      <button class="btn-next" id="submitBtn" onclick="submitForm()">Start your project →</button>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success" id="success">
+    <span class="success-mark">✦</span>
+    <h2>You're all set.<br><em>We'll be in touch.</em></h2>
+    <p>Thanks for reaching out. We'll review your info and contact you within 24 hours to schedule your free discovery call.</p>
+    <div class="success-tag">✦ &nbsp; Build Your Footprint Web Services</div>
+  </div>
+
+  <footer class="footer">
+    <span class="footer-brand">Build Your Footprint</span>
+    <span>buildyourfootprint.com</span>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('selected'));
+  });
+
+  function getServices() {
+    return [...document.querySelectorAll('.chip.selected')].map(c => c.dataset.val);
+  }
+
+  function showSection(idx) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('section-' + idx).classList.add('active');
+    document.querySelectorAll('.step-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+      d.classList.toggle('done', i < idx);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goNext(from) {
+    if (from === 0) {
+      if (!document.getElementById('clientName').value.trim() ||
+          !document.getElementById('businessName').value.trim() ||
+          !document.getElementById('industry').value) {
+        alert('Please fill in your name, business name, and industry.');
+        return;
+      }
+    }
+    if (from === 1 && getServices().length === 0) {
+      alert('Please select at least one service.');
+      return;
+    }
+    showSection(from + 1);
+  }
+
+  function goBack(from) { showSection(from - 1); }
+
+  async function submitForm() {
+    const email = document.getElementById('email').value.trim();
+    if (!email) { alert('Please enter your email address.'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    const errEl = document.getElementById('errorMsg');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    errEl.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientName:     document.getElementById('clientName').value.trim(),
+          businessName:   document.getElementById('businessName').value.trim(),
+          industry:       document.getElementById('industry').value,
+          currentWebsite: document.getElementById('currentWebsite').value.trim(),
+          services:       getServices(),
+          notes:          document.getElementById('notes').value.trim(),
+          email,
+          phone:          document.getElementById('phone').value.trim(),
+          referral:       document.getElementById('referral').value
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.ok) {
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById('steps').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        throw new Error(data.error || 'Submission failed');
+      }
+    } catch (err) {
+      errEl.textContent = 'Something went wrong. Please try again or email us at hello@buildyourfootprint.com';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Start your project →';
+    }
+  }
+</script>
+</body>
+</html>
