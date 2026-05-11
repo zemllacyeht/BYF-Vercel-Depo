@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       headers: {
         'Authorization': `Bearer ${process.env.NOTION_TOKEN}`,
         'Content-Type': 'application/json',
-        'Notion-Version': '2022-06-28'
+        'Notion-Version': '2025-09-03'
       },
       body: JSON.stringify(notionBody)
     });
