@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const payload = req.body;
 
     const notionBody = {
-      parent: { type: 'database_id', database_id: 'd1ab35f4-f5fa-4cae-8d94-dda6688235d2' },
+      parent: { type: 'database_id', database_id: '4bc42faa-9495-4967-b898-eb6c27ce349a' },
       properties: {
         'Client Name': {
           title: [{ text: { content: payload.clientName || '' } }]
